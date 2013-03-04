@@ -4,10 +4,9 @@ Preferences and settings for using OS X as a kiosk in an exhibition environment.
 
 ## What do these settings change?
 
-These dotfiles disable small things like UI animation, as well as disabling system-wide services such as Spotlight Indexing and other processes that can swallow significant resources at any point while the kiosk is active.
+These dotfiles disable small things like UI animation, set power management settings, as well as disabling system-wide services such as Spotlight Indexing and other processes that can swallow significant resources at any point while the kiosk is active.
 
-
-Among other smaller changes, the main changes are:
+###Among miscellaneous smaller changes, the main changes are:
 
 * Removes menu bar effects and clean up unused icons
 * Disables window and get info animations
