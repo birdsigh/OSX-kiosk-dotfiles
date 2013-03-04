@@ -349,6 +349,26 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 hash tmutil &> /dev/null && sudo tmutil disablelocal
 
 ###############################################################################
+# Spotlight                                                                   #
+###############################################################################
+
+# Disable spotlight and indexing
+sudo mdutil -a -i off
+# Remove from the menu bar
+sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+killall SystemUIServer
+# Delete the current index
+mdutil -i off /
+mdutil -E /
+
+###############################################################################
+# Dashboard                                                                   #
+###############################################################################
+
+defaults write com.apple.dashboard mcx-disabled -boolean YES
+killall Dock
+
+###############################################################################
 # Disk Utility                   											  #
 ###############################################################################
 
