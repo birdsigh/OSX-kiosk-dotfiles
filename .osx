@@ -374,13 +374,12 @@ hash tmutil &> /dev/null && sudo tmutil disablelocal
 ###############################################################################
 
 # Disable spotlight and indexing
-sudo mdutil -a -i off
+mdutil -a -i off
 # Remove from the menu bar
-sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 killall SystemUIServer
 # Delete the current index
-mdutil -i off /
-mdutil -E /
+mdutil -E
 
 ###############################################################################
 # Dashboard                                                                   #
