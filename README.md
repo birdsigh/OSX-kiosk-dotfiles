@@ -1,4 +1,4 @@
-kiosk_dotfiles
+Kiosk Dotfiles
 ==============
 
-Dotfiles for OS X as a kiosk
+Preferences and settings for using OS X as a kiosk in an exhibition environment.
