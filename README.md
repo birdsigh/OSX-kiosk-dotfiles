@@ -17,7 +17,7 @@ These dotfiles disable small things like UI animation, set power management sett
 * Restarts automatically if the computer freezes
 * Start up automatically after a power failure
 * Increases sound quality for Bluetooth audio
-* Disables bluetooth daemon (remove this from .osx if improved bluetooth audio is required)
+* Disables bluetooth daemon (remove this from `.osx` if improved bluetooth audio is required)
 * Enables access for assistive devices
 * Disables auto-correct
 * Enables subpixel font rendering on non-Apple LCDs
