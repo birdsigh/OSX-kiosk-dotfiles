@@ -72,6 +72,14 @@ systemsetup -setrestartfreeze on
 
 # Never go into computer sleep mode
 systemsetup -setcomputersleep Off > /dev/null
+sudo pmset sleep 0
+
+# Restart automatically from power failure
+pmset autorestart 1
+
+# Restart at 2am, off for 5mins
+pmset repeat shutdown MTWRFSU 02:00:00
+pmset repeat wakeorpoweron MTWRFSU 02:05:00
 
 # Check for software updates daily, not just once per week
 #defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
@@ -144,6 +152,9 @@ defaults write NSGlobalDomain AppleFontSmoothing -int 2
 
 # Enable HiDPI display modes (requires restart)
 sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+
+# Disable screensaver
+defaults -currentHost write com.apple.screensaver idleTime 0
 
 ###############################################################################
 # Finder                                                                      #
@@ -243,6 +254,16 @@ defaults write /Library/Preferences/com.apple.Bluetooth.plist ControllerPowerSta
 launchctl unload -w /System/Library/LaunchDaemons/com.apple.blued.plist
 killall blued
 
+###############################################################################
+# Sharing                                                                     #
+###############################################################################
+
+# Enable SMB filesharing
+pwpolicy -sethashtypes SMB-NT on
+
+# Enable Screensharing
+sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
+sudo launchctl load /System/Library/LaunchDaemons/com.apple.screensharing.plist
 
 ###############################################################################
 # Dock                                                                        #

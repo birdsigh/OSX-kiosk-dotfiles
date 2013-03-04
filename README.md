@@ -16,7 +16,7 @@ Among other smaller changes, the main changes are:
 * Disables the crash reporter
 * Allows quick access to IP address, hostname, OS version, etc. from the clock in login window
 * Restarts automatically if the computer freezes
-* Never goes into sleep mode
+* Start up automatically after a power failure
 * Increases sound quality for Bluetooth audio
 * Disables bluetooth daemon (remove this from .osx if improved bluetooth audio is required)
 * Enables access for assistive devices
@@ -35,3 +35,9 @@ Among other smaller changes, the main changes are:
 * Enables the debug menu in Disk Utility
 * Disables Spotlight and indexing
 * Disables Dashboard
+* Enables screen sharing
+* Enables file sharing
+* Never goes into sleep mode
+* Never start the screensaver
+* Never sleep the display
+* Scheduled restart at 2am every day
