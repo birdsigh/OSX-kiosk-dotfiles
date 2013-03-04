@@ -235,7 +235,17 @@ defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 chflags nohidden ~/Library
 
 ###############################################################################
-# Dock                                                          #
+# Bluetooth                                                                   #
+###############################################################################
+
+# Turn off the Bluetooth server and kill active daemon
+defaults write /Library/Preferences/com.apple.Bluetooth.plist ControllerPowerState -bool false
+launchctl unload -w /System/Library/LaunchDaemons/com.apple.blued.plist
+killall blued
+
+
+###############################################################################
+# Dock                                                                        #
 ###############################################################################
 
 # Show indicator lights for open applications in the Dock
