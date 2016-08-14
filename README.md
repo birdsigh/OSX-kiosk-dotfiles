@@ -1,4 +1,4 @@
-#Kiosk Dotfiles
+#OSX Kiosk Dotfiles
 ![Sorely needs updating](https://img.shields.io/badge/needs%20updating-sorely-red.svg)
 
 Preferences and settings for using OS X as a kiosk in an exhibition environment. This assumes running 10.6 or higher.
