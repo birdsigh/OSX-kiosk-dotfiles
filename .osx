@@ -61,7 +61,6 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 # Never go into computer sleep mode
-systemsetup -setcomputersleep Off > /dev/null
 sudo pmset sleep 0
 
 # Restart automatically from power failure
