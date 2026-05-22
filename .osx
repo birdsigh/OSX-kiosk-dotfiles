@@ -113,8 +113,9 @@ defaults write NSGlobalDomain AppleLocale -string "en_GB@currency=GBP"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
-# Set the timezone; see `systemsetup -listtimezones` for other values
-systemsetup -settimezone "GMT" > /dev/null
+# Set the timezone
+# TODO: systemsetup -settimezone is deprecated. Replacement needs testing on Tahoe.
+# See GitHub issue for research on the correct modern approach.
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
