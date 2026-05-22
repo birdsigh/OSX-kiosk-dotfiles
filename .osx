@@ -233,12 +233,9 @@ killall blued
 # Sharing                                                                     #
 ###############################################################################
 
-# Enable SMB filesharing
-pwpolicy -sethashtypes SMB-NT on
-
 # Enable Screensharing
-sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
-sudo launchctl load /System/Library/LaunchDaemons/com.apple.screensharing.plist
+sudo launchctl enable system/com.apple.screensharing
+sudo launchctl load -F /System/Library/LaunchDaemons/com.apple.screensharing.plist
 
 ###############################################################################
 # Dock                                                                        #
