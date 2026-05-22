@@ -1,3 +1,7 @@
+# Note: zsh is the default shell since macOS Catalina. These dotfiles target bash.
+# To use bash, run: chsh -s /bin/bash
+# Or migrate these settings to ~/.zprofile and ~/.zshrc for zsh.
+
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH"
 
