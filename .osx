@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Check we're running on macOS Tahoe (26) or later
+MACOS_MAJOR=$(sw_vers -productVersion | cut -d. -f1)
+if [ "$MACOS_MAJOR" -lt 26 ]; then
+  echo "Warning: This script is written for macOS Tahoe (26) or later."
+  echo "Running on macOS $MACOS_MAJOR may produce errors or have no effect."
+  read -p "Continue anyway? (y/n) " -n 1
+  echo
+  [[ ! $REPLY =~ ^[Yy]$ ]] && exit 1
+fi
+
 # Ask for the administrator password upfront
 sudo -v
 
