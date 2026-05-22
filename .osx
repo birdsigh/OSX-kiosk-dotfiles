@@ -227,10 +227,11 @@ chflags nohidden ~/Library
 # Bluetooth                                                                   #
 ###############################################################################
 
-# Turn off the Bluetooth server and kill active daemon
-defaults write /Library/Preferences/com.apple.Bluetooth.plist ControllerPowerState -bool false
-launchctl unload -w /System/Library/LaunchDaemons/com.apple.blued.plist
-killall blued
+# Bluetooth is left enabled by default. If your kiosk uses no Bluetooth
+# peripherals and you want to disable it, uncomment the following:
+#defaults write /Library/Preferences/com.apple.Bluetooth ControllerPowerState -bool false
+#sudo launchctl disable system/com.apple.blued
+#sudo killall blued
 
 ###############################################################################
 # Sharing                                                                     #
