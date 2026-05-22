@@ -64,11 +64,14 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 sudo pmset sleep 0
 
 # Restart automatically from power failure
-pmset autorestart 1
+# autorestartatconnect is supported on Mac mini 2024+, Mac Studio 2025+, iMac 2024+
+# On older hardware this may have no effect
+sudo pmset autorestartatconnect 1
 
-# Restart at 2am, off for 5mins
-pmset repeat shutdown MTWRFSU 02:00:00
-pmset repeat wakeorpoweron MTWRFSU 02:05:00
+# Restart at 2am every day
+# Note: two separate pmset repeat calls conflict; only the last one takes effect.
+# Using a single 'restart' event is cleaner and works on Apple Silicon.
+sudo pmset repeat restart MTWRFSU 02:00:00
 
 # Check for software updates daily, not just once per week
 #defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
