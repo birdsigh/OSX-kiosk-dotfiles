@@ -73,8 +73,15 @@ sudo pmset autorestartatconnect 1
 # Using a single 'restart' event is cleaner and works on Apple Silicon.
 sudo pmset repeat restart MTWRFSU 02:00:00
 
-# Check for software updates daily, not just once per week
-#defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+# Suppress automatic software update checks, downloads, installs, and update
+# notifications for kiosk installs. These defaults are per-user, so run this
+# setup while logged into the kiosk account in two-account admin/kiosk setups.
+sudo softwareupdate --schedule off
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool false
+defaults write com.apple.SoftwareUpdate AutomaticDownload -bool false
+defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool false
+defaults write com.apple.SoftwareUpdate MajorOSUserNotificationDate -date "2030-01-01 00:00:00 +0000"
+defaults write com.apple.SoftwareUpdate UserNotificationDate -date "2030-01-01 00:00:00 +0000"
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
