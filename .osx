@@ -3,6 +3,9 @@
 # Ask for the administrator password upfront
 sudo -v
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/power-restart-compat.sh"
+
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -63,10 +66,45 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 # Never go into computer sleep mode
 sudo pmset sleep 0
 
-# Restart automatically from power failure
-# autorestartatconnect is supported on Mac mini 2024+, Mac Studio 2025+, iMac 2024+
-# On older hardware this may have no effect
-sudo pmset autorestartatconnect 1
+# Restart automatically from power failure.
+#
+# Hardware compatibility matrix, based on Apple Support article 125517 and
+# Der Flounder notes from May 2026:
+# - Mac mini 2024+ (Mac16,10, Mac16,11): use `pmset autorestartatconnect 1`;
+#   requires macOS Tahoe 26.5+. This is Apple's supported "start up when power
+#   is connected" path.
+# - Older Apple Silicon Mac mini, including M1 2020 and M2 2023 models:
+#   `autorestartatconnect` may be present or accepted, but is not known to have
+#   any effect. The older `autorestart` key is not a reliable substitute for
+#   powering on from a fully powered-off AC restore state.
+# - Mac Studio 2025+ (Mac16,9, Mac15,14): use `pmset autorestartatconnect 1`;
+#   requires macOS Tahoe 26.5+.
+# - Mac Studio 2022 and 2023: neither `autorestartatconnect` nor `autorestart`
+#   is known to provide reliable automatic power-on after AC restore.
+# - iMac 2024+ (Mac16,2, Mac16,3): use `pmset autorestartatconnect 1`;
+#   requires macOS Tahoe 26.5+.
+# - Apple Silicon iMac 2021 and 2023: neither key is known to provide reliable
+#   automatic power-on after AC restore.
+# - Intel Macs: `autorestartatconnect` is not supported. Some desktop Intel Macs
+#   support the older `pmset autorestart 1` key for restart after power loss, but
+#   behavior varies by model and macOS release; physically test before kiosk use.
+power_model_identifier="$(kiosk_model_identifier)"
+power_processor_name="$(kiosk_processor_name)"
+power_macos_version="$(kiosk_macos_version)"
+power_restart_status="$(kiosk_autorestartatconnect_status "$power_model_identifier" "$power_processor_name" "$power_macos_version")"
+
+case "$power_restart_status" in
+	supported)
+		sudo pmset autorestartatconnect 1
+		;;
+	legacy-intel)
+		printf '[WARN] %s\n' "$(kiosk_autorestartatconnect_message "$power_restart_status" "$power_model_identifier" "$power_processor_name" "$power_macos_version")" >&2
+		sudo pmset autorestart 1
+		;;
+	*)
+		printf '[WARN] %s\n' "$(kiosk_autorestartatconnect_message "$power_restart_status" "$power_model_identifier" "$power_processor_name" "$power_macos_version")" >&2
+		;;
+esac
 
 # Restart at 2am every day
 # Note: two separate pmset repeat calls conflict; only the last one takes effect.
