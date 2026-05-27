@@ -56,6 +56,21 @@ defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
 # Disable the crash reporter
 defaults write com.apple.CrashReporter DialogType -string "none"
 
+###############################################################################
+# Notifications                                                               #
+###############################################################################
+
+# Suppress notification banners and alerts for kiosk operation on macOS Tahoe.
+#
+# Tahoe's Notification Center LaunchAgent label is
+# com.apple.notificationcenterui.agent. Disabling that label in the current GUI
+# domain persists across reboot for this user; booting out the plist stops the
+# already-running instance in the current login session.
+notification_center_label="com.apple.notificationcenterui.agent"
+notification_center_plist="/System/Library/LaunchAgents/com.apple.notificationcenterui.plist"
+launchctl disable "gui/$(id -u)/${notification_center_label}" 2>/dev/null || true
+launchctl bootout "gui/$(id -u)" "${notification_center_plist}" 2>/dev/null || true
+
 # Reveal IP address, hostname, OS version, etc. when clicking the clock
 # in the login window
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
