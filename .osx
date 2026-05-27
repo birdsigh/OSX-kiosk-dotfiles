@@ -43,6 +43,17 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 # Disable the “Are you sure you want to open this application?” dialog
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
+# Disable Gatekeeper assessments so unsigned creative coding apps can launch
+# in kiosk/gallery installs. On macOS 15+ this may require confirmation in
+# System Settings or management via a SystemPolicyControl configuration profile.
+sudo spctl --master-disable || sudo spctl --global-disable
+gatekeeper_status="$(spctl --status 2>/dev/null)"
+if [ "$gatekeeper_status" != "assessments disabled" ]; then
+	echo "Warning: Gatekeeper is not disabled; spctl --status reports: $gatekeeper_status"
+	echo "Unsigned apps may still need Privacy & Security approval or quarantine removal."
+fi
+unset gatekeeper_status
+
 # Display ASCII control characters using caret notation in standard text views
 # Try e.g. `cd /tmp; unidecode "\x{0000}" > cc.txt; open -e cc.txt`
 defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
