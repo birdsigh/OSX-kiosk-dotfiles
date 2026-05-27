@@ -111,8 +111,14 @@ defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Set the timezone
-# TODO: systemsetup -settimezone is deprecated. Replacement needs testing on Tahoe.
-# See GitHub issue for research on the correct modern approach.
+TIMEZONE="${TIMEZONE:-GMT}"
+ZONEINFO_DIR="/var/db/timezone/zoneinfo"
+if [ ! -f "$ZONEINFO_DIR/$TIMEZONE" ]; then
+	echo "Invalid timezone: $TIMEZONE" >&2
+	echo "Use systemsetup -listtimezones to list valid timezone names." >&2
+	exit 1
+fi
+sudo ln -sfn "$ZONEINFO_DIR/$TIMEZONE" /etc/localtime
 
 # Disable auto-correct
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
