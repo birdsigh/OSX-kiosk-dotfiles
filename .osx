@@ -37,6 +37,18 @@ defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 # Save to disk (not to iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
+###############################################################################
+# Setup Assistant and Apple Account                                           #
+###############################################################################
+
+# Mark Apple Account/iCloud onboarding as already seen so kiosk setup is not
+# interrupted by post-install sign-in prompts. The product version key is
+# versioned, so keep it aligned with the OS currently running this script.
+defaults write NSGlobalDomain NSPersonNameDefaultDisplayNameOrder -int 1
+defaults write com.apple.SetupAssistant DidSeeCloudSetup -bool true
+defaults write com.apple.SetupAssistant GestureMovieSeen -string "none"
+defaults write com.apple.SetupAssistant LastSeenCloudProductVersion -string "$(sw_vers -productVersion)"
+
 # Automatically quit printer app once the print jobs complete
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
