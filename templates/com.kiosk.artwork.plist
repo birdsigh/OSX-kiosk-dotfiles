@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Label is the unique identifier launchd uses for this user agent. -->
+	<key>Label</key>
+	<string>com.kiosk.artwork</string>
+
+	<!--
+		ProgramArguments is the executable and arguments to run.
+		Replace the placeholder path with the absolute path to your artwork,
+		kiosk app launcher, or wrapper script.
+	-->
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/USERNAME/path/to/start-artwork.sh</string>
+	</array>
+
+	<!-- RunAtLoad starts the artwork as soon as this LaunchAgent is loaded at login. -->
+	<key>RunAtLoad</key>
+	<true/>
+
+	<!-- KeepAlive restarts the artwork automatically if the process exits or crashes. -->
+	<key>KeepAlive</key>
+	<true/>
+
+	<!-- ThrottleInterval waits this many seconds before relaunching after an exit. -->
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+
+	<!-- StandardOutPath receives stdout from the artwork process. -->
+	<key>StandardOutPath</key>
+	<string>/Users/USERNAME/Library/Logs/kiosk-artwork.log</string>
+
+	<!-- StandardErrorPath receives stderr from the artwork process. -->
+	<key>StandardErrorPath</key>
+	<string>/Users/USERNAME/Library/Logs/kiosk-artwork.log</string>
+</dict>
+</plist>
