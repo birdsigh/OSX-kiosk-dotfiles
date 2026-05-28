@@ -9,19 +9,18 @@ These dotfiles disable small things like UI animation, set power management sett
 
 ###Among miscellaneous smaller changes, the main changes are:
 
-* Removes menu bar effects and clean up unused icons
+* Cleans up unused menu bar icons
 * Disables window and get info animations
 * Disables Resume system-wide
 * Disables automatic termination of inactive apps
 * Disables the crash reporter
 * Allows quick access to IP address, hostname, OS version, etc. from the clock in login window
-* Restarts automatically if the computer freezes
-* Start up automatically after a power failure
+* Restarts automatically after reconnecting power
 * Increases sound quality for Bluetooth audio
-* Disables bluetooth daemon (remove this from `.osx` if improved bluetooth audio is required)
-* Enables access for assistive devices
+* Leaves Bluetooth enabled by default, with optional commented-out disable commands for kiosks without Bluetooth peripherals
+* Enables full keyboard access for all controls
+* Enables keyboard-focus zoom controls
 * Disables auto-correct
-* Enables subpixel font rendering on non-Apple LCDs
 * Enables HiDPI display modes
 * Shows icons for hard drives, servers, and removable media on the desktop
 * Shows hidden files
@@ -29,15 +28,14 @@ These dotfiles disable small things like UI animation, set power management sett
 * Enables AirDrop over Ethernet and on unsupported Macs running Lion
 * Shows the ~/Library folder
 * Wipes all default app icons from the Dock
-* Enables the 2D Dock
-* Hides the dock, with no delay on show / hide
+* Shows Dock indicator lights for open applications
+* Hides the Dock, with no delay on show / hide
+* Makes hidden application icons translucent in the Dock
+* Adds Dock spacers
 * Prevents Time Machine from prompting to use new hard drives as backup volume
 * Enables the debug menu in Disk Utility
 * Disables Spotlight and indexing
-* Disables Dashboard
 * Enables screen sharing
-* Enables file sharing
 * Never goes into sleep mode
 * Never start the screensaver
-* Never sleep the display
 * Scheduled restart at 2am every day
