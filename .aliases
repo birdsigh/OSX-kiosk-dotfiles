@@ -55,7 +55,7 @@ alias gl='git log'
 # Python
 alias pym='python manage.py'
 alias clearpyc='find . -name "*.pyc" -exec rm {} \;'
-alias serve='python -m SimpleHTTPServer'
+alias serve='python3 -m http.server'
 
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
@@ -108,7 +108,7 @@ alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && 
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 # URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+alias urlencode='python3 -c "import sys; from urllib.parse import quote_plus; print(quote_plus(sys.argv[1]));"'
 
 # Merge PDF files
 # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
