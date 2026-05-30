@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+	"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kiosk.artwork</string>
+
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Users/USERNAME/path/to/start-artwork.sh</string>
+	</array>
+
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>KeepAlive</key>
+	<true/>
+
+	<key>ThrottleInterval</key>
+	<integer>10</integer>
+
+	<key>StandardOutPath</key>
+	<string>/Users/USERNAME/Library/Logs/kiosk-artwork.log</string>
+
+	<key>StandardErrorPath</key>
+	<string>/Users/USERNAME/Library/Logs/kiosk-artwork.log</string>
+</dict>
+</plist>
