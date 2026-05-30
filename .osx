@@ -319,10 +319,13 @@ defaults write com.apple.Safari ProxiesInBookmarksBar "()"
 defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
-open "$HOME/init/birdsigh.terminal"
-sleep 1 # Wait a bit to make sure the theme is loaded
-defaults write com.apple.terminal "Default Window Settings" -string "Birdsigh"
-defaults write com.apple.terminal "Startup Window Settings" -string "Birdsigh"
+terminal_theme="$HOME/init/birdsigh.terminal"
+if [ -r "$terminal_theme" ]; then
+	open "$terminal_theme"
+	sleep 1 # Wait a bit to make sure the theme is loaded
+	defaults write com.apple.terminal "Default Window Settings" -string "Birdsigh"
+	defaults write com.apple.terminal "Startup Window Settings" -string "Birdsigh"
+fi
 
 # Enable “focus follows mouse” for Terminal.app and all X11 apps
 # i.e. hover over a window and start typing in it without clicking first
