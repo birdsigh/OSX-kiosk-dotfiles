@@ -39,3 +39,35 @@ These dotfiles disable small things like UI animation, set power management sett
 * Never goes into sleep mode
 * Never start the screensaver
 * Scheduled restart at 2am every day
+
+## Launching artwork on login
+
+Use `templates/com.kiosk.artwork.plist` as a starting point for launching the
+actual artwork or kiosk application when the user logs in. The template uses
+`RunAtLoad` to start immediately, `KeepAlive` to restart after a crash, and a
+10 second `ThrottleInterval` to avoid tight restart loops.
+
+Copy the template into the user's LaunchAgents folder, then edit the placeholder
+paths before loading it:
+
+```sh
+mkdir -p ~/Library/LaunchAgents ~/Library/Logs
+cp templates/com.kiosk.artwork.plist ~/Library/LaunchAgents/
+$EDITOR ~/Library/LaunchAgents/com.kiosk.artwork.plist
+launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.kiosk.artwork.plist
+launchctl enable "gui/$(id -u)/com.kiosk.artwork"
+launchctl kickstart -k "gui/$(id -u)/com.kiosk.artwork"
+```
+
+Check status and logs with:
+
+```sh
+launchctl print "gui/$(id -u)/com.kiosk.artwork"
+tail -f ~/Library/Logs/kiosk-artwork.log
+```
+
+To unload the agent while testing:
+
+```sh
+launchctl bootout "gui/$(id -u)" ~/Library/LaunchAgents/com.kiosk.artwork.plist
+```
