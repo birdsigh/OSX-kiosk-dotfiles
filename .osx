@@ -115,7 +115,7 @@ TIMEZONE="${TIMEZONE:-GMT}"
 ZONEINFO_DIR="/var/db/timezone/zoneinfo"
 if [ ! -f "$ZONEINFO_DIR/$TIMEZONE" ]; then
 	echo "Invalid timezone: $TIMEZONE" >&2
-	echo "Use systemsetup -listtimezones to list valid timezone names." >&2
+	echo "List available timezones with: ls -R $ZONEINFO_DIR/" >&2
 	exit 1
 fi
 sudo ln -sfn "$ZONEINFO_DIR/$TIMEZONE" /etc/localtime
