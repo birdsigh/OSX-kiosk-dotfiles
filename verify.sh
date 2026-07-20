@@ -208,6 +208,13 @@ check_general_ui_ux() {
 	check_bool "General UI/UX: Launch Services quarantine dialog is disabled" "0" com.apple.LaunchServices LSQuarantine
 }
 
+check_apple_account_onboarding() {
+	check_equals "Apple Account: name display order is set" "1" NSGlobalDomain NSPersonNameDefaultDisplayNameOrder
+	check_bool "Apple Account: iCloud setup is marked as seen" "1" com.apple.SetupAssistant DidSeeCloudSetup
+	check_equals "Apple Account: Setup Assistant gesture movie is suppressed" "none" com.apple.SetupAssistant GestureMovieSeen
+	check_equals "Apple Account: cloud product version is current" "$(sw_vers -productVersion 2>/dev/null)" com.apple.SetupAssistant LastSeenCloudProductVersion
+}
+
 check_power_management() {
 	check_pmset_value "sleep" "0" "Power management: system sleep is disabled"
 	check_autorestartatconnect
@@ -240,6 +247,7 @@ check_time_machine() {
 }
 
 check_general_ui_ux
+check_apple_account_onboarding
 check_power_management
 check_input
 check_screen
