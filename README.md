@@ -1,73 +1,81 @@
-#OSX Kiosk Dotfiles
-![Sorely needs updating](https://img.shields.io/badge/needs%20updating-sorely-red.svg)
+# OSX Kiosk Dotfiles
 
-Preferences and settings for using OS X as a kiosk in an exhibition environment. This assumes running 10.6 or higher.
+Preferences and settings for using macOS as a kiosk in an exhibition environment.
+The current target for verification is macOS Tahoe in a UTM VM on Apple Silicon.
 
-## What do these settings change?
+## Structure
 
-These dotfiles disable small things like UI animation, set power management settings, as well as disabling system-wide services such as Spotlight Indexing and other processes that can swallow significant resources at any point while the kiosk is active.
+- `bootstrap.sh`: syncs the repo contents into the current home directory
+- `kiosk.sh`: orchestrates the full kiosk baseline, including sudo keepalive and macOS version check
+- `lib/power.sh`: `pmset`, sleep, scheduled restart, power-on-connect
+- `lib/ui.sh`: Dock, Finder, animations, screensaver, menu bar, app UI defaults
+- `lib/system.sh`: Spotlight, Time Machine, crash reporter, update suppression
+- `lib/sharing.sh`: Screen Sharing, optional File Sharing, optional Bluetooth disable
+- `lib/security.sh`: Gatekeeper, Launch Services quarantine, iCloud suppression
+- `lib/notifications.sh`: Notification Center suppression, Siri, Apple Intelligence
+- `templates/com.kiosk.artwork.plist`: LaunchAgent template for artwork auto-launch
+- `docs/setup.md`: manual setup steps and the formal test plan
+- `verify.sh`: Tahoe verification checks for the scripted baseline
 
-###Among miscellaneous smaller changes, the main changes are:
-
-* Cleans up unused menu bar icons
-* Disables window and get info animations
-* Disables Resume system-wide
-* Disables automatic termination of inactive apps
-* Disables the crash reporter
-* Allows quick access to IP address, hostname, OS version, etc. from the clock in login window
-* Restarts automatically after reconnecting power
-* Increases sound quality for Bluetooth audio
-* Leaves Bluetooth enabled by default, with optional commented-out disable commands for kiosks without Bluetooth peripherals
-* Enables full keyboard access for all controls
-* Enables keyboard-focus zoom controls
-* Disables auto-correct
-* Enables HiDPI display modes
-* Shows icons for hard drives, servers, and removable media on the desktop
-* Shows hidden files
-* Avoids creating .DS_Store files on network volumes
-* Enables AirDrop over Ethernet and on unsupported Macs running Lion
-* Shows the ~/Library folder
-* Wipes all default app icons from the Dock
-* Shows Dock indicator lights for open applications
-* Hides the Dock, with no delay on show / hide
-* Makes hidden application icons translucent in the Dock
-* Adds Dock spacers
-* Prevents Time Machine from prompting to use new hard drives as backup volume
-* Enables the debug menu in Disk Utility
-* Disables Spotlight and indexing
-* Enables screen sharing
-* Never goes into sleep mode
-* Never start the screensaver
-* Scheduled restart at 2am every day
-
-## Launching artwork on login
-
-Use `templates/com.kiosk.artwork.plist` as a starting point for launching the
-actual artwork or kiosk application when the user logs in. The template uses
-`RunAtLoad` to start immediately, `KeepAlive` to restart after a crash, and a
-10 second `ThrottleInterval` to avoid tight restart loops.
-
-Copy the template into the user's LaunchAgents folder, then edit the placeholder
-paths before loading it:
+Each `lib/` file is independently runnable for partial re-application:
 
 ```sh
-mkdir -p ~/Library/LaunchAgents ~/Library/Logs
-cp templates/com.kiosk.artwork.plist ~/Library/LaunchAgents/
-$EDITOR ~/Library/LaunchAgents/com.kiosk.artwork.plist
-launchctl bootstrap "gui/$(id -u)" ~/Library/LaunchAgents/com.kiosk.artwork.plist
-launchctl enable "gui/$(id -u)/com.kiosk.artwork"
-launchctl kickstart -k "gui/$(id -u)/com.kiosk.artwork"
+./lib/power.sh
+./lib/ui.sh
+./lib/system.sh
+./lib/sharing.sh
+./lib/security.sh
+./lib/notifications.sh
 ```
 
-Check status and logs with:
+## Usage
 
 ```sh
-launchctl print "gui/$(id -u)/com.kiosk.artwork"
-tail -f ~/Library/Logs/kiosk-artwork.log
+./bootstrap.sh
+./kiosk.sh
+./verify.sh
 ```
 
-To unload the agent while testing:
+Run `verify.sh` again after reboot to confirm settings survive restart.
 
-```sh
-launchctl bootout "gui/$(id -u)" ~/Library/LaunchAgents/com.kiosk.artwork.plist
-```
+## What these settings change
+
+Among miscellaneous smaller changes, the main changes are:
+
+- Cleans up unused menu bar icons
+- Disables window and Get Info animations
+- Disables Resume system-wide
+- Disables automatic termination of inactive apps
+- Disables the crash reporter
+- Allows quick access to IP address, hostname, OS version, etc. from the clock in the login window
+- Restarts automatically after reconnecting power where the hardware supports it
+- Increases sound quality for Bluetooth audio
+- Leaves Bluetooth enabled by default, with optional commented-out disable commands
+- Enables full keyboard access for all controls
+- Enables keyboard-focus zoom controls
+- Disables auto-correct
+- Enables HiDPI display modes
+- Shows icons for hard drives, servers, and removable media on the desktop
+- Shows hidden files
+- Avoids creating `.DS_Store` files on network volumes
+- Enables AirDrop over Ethernet and on unsupported Macs running Lion
+- Shows the `~/Library` folder
+- Wipes default app icons from the Dock
+- Shows Dock indicator lights for open applications
+- Hides the Dock, with no delay on show and hide
+- Makes hidden application icons translucent in the Dock
+- Adds Dock spacers
+- Prevents Time Machine from prompting to use new hard drives as backup volumes
+- Suppresses automatic software update checks, downloads, installs, and update notifications
+- Enables the debug menu in Disk Utility
+- Disables Spotlight and indexing
+- Enables Screen Sharing
+- Suppresses Notification Center, Siri, and Apple Intelligence onboarding
+- Disables Launch Services quarantine prompts and attempts to disable Gatekeeper assessments
+- Suppresses iCloud and Apple Account onboarding prompts
+- Never goes into sleep mode
+- Never starts the screensaver
+- Schedules a restart at 2am every day
+
+See [docs/setup.md](docs/setup.md) for manual steps that cannot be scripted,
+including auto-login and Screen Time lockdown.
