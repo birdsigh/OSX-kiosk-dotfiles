@@ -224,6 +224,24 @@ check_siri_and_intelligence() {
 	check_bool "Apple Intelligence: setup is marked as seen" "1" com.apple.SetupAssistant DidSeeIntelligence
 }
 
+check_notification_center_disabled() {
+	local description="Notifications: Notification Center is persistently disabled"
+	local label="com.apple.notificationcenterui.agent"
+	local status
+
+	if ! command -v launchctl >/dev/null 2>&1; then
+		fail "$description" "launchctl is unavailable."
+		return
+	fi
+
+	status="$(launchctl print-disabled "gui/$(id -u)" 2>/dev/null || true)"
+	if printf '%s\n' "$status" | grep -F "\"${label}\" => disabled" >/dev/null; then
+		pass "$description"
+	else
+		fail "$description" "${label} is not disabled in the current GUI domain."
+	fi
+}
+
 check_power_management() {
 	check_pmset_value "sleep" "0" "Power management: system sleep is disabled"
 	check_autorestartatconnect
@@ -258,6 +276,7 @@ check_time_machine() {
 check_general_ui_ux
 check_apple_account_onboarding
 check_siri_and_intelligence
+check_notification_center_disabled
 check_power_management
 check_input
 check_screen
