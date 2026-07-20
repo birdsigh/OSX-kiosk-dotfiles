@@ -224,6 +224,18 @@ check_siri_and_intelligence() {
 	check_bool "Apple Intelligence: setup is marked as seen" "1" com.apple.SetupAssistant DidSeeIntelligence
 }
 
+check_software_updates() {
+	local schedule
+	schedule="$(softwareupdate --schedule 2>&1 || true)"
+	case "$schedule" in
+		*"Automatic check is off"*|*"Automatic checking is off"*) pass "Software Update: scheduled checks are off" ;;
+		*) fail "Software Update: scheduled checks are off" "${schedule:-<no output>}" ;;
+	esac
+	check_bool "Software Update: automatic checks are disabled" "0" com.apple.SoftwareUpdate AutomaticCheckEnabled
+	check_bool "Software Update: automatic downloads are disabled" "0" com.apple.SoftwareUpdate AutomaticDownload
+	check_bool "Software Update: critical update installs are disabled" "0" com.apple.SoftwareUpdate CriticalUpdateInstall
+}
+
 check_notification_center_disabled() {
 	local description="Notifications: Notification Center is persistently disabled"
 	local label="com.apple.notificationcenterui.agent"
@@ -276,6 +288,7 @@ check_time_machine() {
 check_general_ui_ux
 check_apple_account_onboarding
 check_siri_and_intelligence
+check_software_updates
 check_notification_center_disabled
 check_power_management
 check_input
