@@ -5,6 +5,9 @@
 
 set -u
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/power-restart-compat.sh"
+
 PASS_COUNT=0
 FAIL_COUNT=0
 INFO_COUNT=0
@@ -115,24 +118,29 @@ check_pmset_value() {
 
 check_autorestartatconnect() {
 	local description="Power management: restart automatically after reconnecting power"
-	local value
+	local model_identifier processor_name macos_version restart_status restart_message value
 
-	if ! command -v pmset >/dev/null 2>&1; then
-		fail "$description" "pmset is unavailable."
-		return
-	fi
+	model_identifier="$(kiosk_model_identifier)"
+	processor_name="$(kiosk_processor_name)"
+	macos_version="$(kiosk_macos_version)"
+	restart_status="$(kiosk_autorestartatconnect_status "$model_identifier" "$processor_name" "$macos_version")"
+	restart_message="$(kiosk_autorestartatconnect_message "$restart_status" "$model_identifier" "$processor_name" "$macos_version")"
 
-	value="$(pmset -g 2>/dev/null | awk '$1 == "autorestartatconnect" { print $2; exit }')"
-
-	case "$value" in
-		1)
-			pass "$description"
+	case "$restart_status" in
+		supported)
+			value="$(pmset -g 2>/dev/null | awk '$1 == "autorestartatconnect" { print $2; exit }')"
+			if [ "$value" = "1" ]; then
+				pass "$description"
+			else
+				fail "$description" "$restart_message Expected 'autorestartatconnect' to be '1', got '${value:-<unset>}'."
+			fi
 			;;
-		"")
-			info "$description" "autorestartatconnect is not reported by this hardware."
+		legacy-intel)
+			value="$(pmset -g 2>/dev/null | awk '$1 == "autorestart" { print $2; exit }')"
+			info "$description" "$restart_message autorestart=${value:-<unset>}."
 			;;
 		*)
-			fail "$description" "expected 'autorestartatconnect' to be '1', got '$value'"
+			info "$description" "$restart_message"
 			;;
 	esac
 }
