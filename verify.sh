@@ -215,6 +215,15 @@ check_apple_account_onboarding() {
 	check_equals "Apple Account: cloud product version is current" "$(sw_vers -productVersion 2>/dev/null)" com.apple.SetupAssistant LastSeenCloudProductVersion
 }
 
+check_siri_and_intelligence() {
+	check_bool "Siri: assistant is disabled" "0" com.apple.assistant.support "Assistant Enabled"
+	check_equals "Siri: data sharing is declined" "2" com.apple.assistant.support "Siri Data Sharing Opt-In Status"
+	check_bool "Siri: setup is marked as seen" "1" com.apple.SetupAssistant DidSeeSiriSetup
+	check_bool "Apple Intelligence: feature opt-in is disabled" "0" com.apple.CloudSubscriptionFeatures.optIn 545129924
+	check_bool "Apple Intelligence: automatic opt-in is disabled" "0" com.apple.CloudSubscriptionFeatures.optIn auto_opt_in
+	check_bool "Apple Intelligence: setup is marked as seen" "1" com.apple.SetupAssistant DidSeeIntelligence
+}
+
 check_power_management() {
 	check_pmset_value "sleep" "0" "Power management: system sleep is disabled"
 	check_autorestartatconnect
@@ -248,6 +257,7 @@ check_time_machine() {
 
 check_general_ui_ux
 check_apple_account_onboarding
+check_siri_and_intelligence
 check_power_management
 check_input
 check_screen
