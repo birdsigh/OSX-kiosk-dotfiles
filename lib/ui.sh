@@ -68,9 +68,16 @@ defaults write NSGlobalDomain AppleLocale -string "en_GB@currency=GBP"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
-# Set the timezone.
-# TODO: systemsetup -settimezone is deprecated. Replacement needs testing on Tahoe.
-# See GitHub issue for research on the correct modern approach.
+# Set the timezone using the zoneinfo link required by Tahoe.
+TIMEZONE="${TIMEZONE:-GMT}"
+ZONEINFO_DIR="/var/db/timezone/zoneinfo"
+if [ ! -f "$ZONEINFO_DIR/$TIMEZONE" ]; then
+	echo "Invalid timezone: $TIMEZONE" >&2
+	echo "List available timezones with: ls -R $ZONEINFO_DIR/" >&2
+	exit 1
+fi
+sudo ln -sfn "$ZONEINFO_DIR/$TIMEZONE" /etc/localtime
+unset TIMEZONE ZONEINFO_DIR
 
 # Disable auto-correct.
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false

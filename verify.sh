@@ -285,6 +285,22 @@ check_time_machine() {
 	check_bool "Time Machine: new disk backup prompts are disabled" "1" com.apple.TimeMachine DoNotOfferNewDisksForBackup
 }
 
+check_timezone() {
+	local timezone="${TIMEZONE:-GMT}"
+	local expected="/var/db/timezone/zoneinfo/$timezone"
+	local actual
+	if [ ! -f "$expected" ]; then
+		fail "Timezone: requested timezone is valid" "$expected does not exist."
+		return
+	fi
+	actual="$(readlink /etc/localtime 2>/dev/null || true)"
+	if [ "$actual" = "$expected" ]; then
+		pass "Timezone: /etc/localtime points to $timezone"
+	else
+		fail "Timezone: /etc/localtime points to $timezone" "expected '$expected', got '${actual:-not a symlink}'."
+	fi
+}
+
 check_general_ui_ux
 check_apple_account_onboarding
 check_siri_and_intelligence
@@ -296,6 +312,7 @@ check_screen
 check_finder
 check_dock
 check_time_machine
+check_timezone
 check_spotlight_disabled
 check_screen_sharing_enabled
 check_major_version_at_least "macOS version: major version is at least 26" 26
