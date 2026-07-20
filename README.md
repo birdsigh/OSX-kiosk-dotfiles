@@ -15,6 +15,7 @@ The current target for verification is macOS Tahoe in a UTM VM on Apple Silicon.
 - `lib/notifications.sh`: Notification Center suppression, Siri, Apple Intelligence
 - `templates/com.kiosk.artwork.plist`: LaunchAgent template for artwork auto-launch
 - `docs/setup.md`: manual setup steps and the formal test plan
+- `docs/tahoe-auto-login.md`: supported auto-login procedure and Tahoe test record
 - `verify.sh`: Tahoe verification checks for the scripted baseline
 
 Each `lib/` file is independently runnable for partial re-application:

@@ -32,7 +32,8 @@ Run any module directly to reapply just that slice, for example:
 These cannot be safely scripted in this repo:
 
 1. Create a dedicated standard kiosk account and a separate administrator account.
-2. Configure auto-login in System Settings > Users & Groups if the kiosk must recover unattended.
+2. Configure auto-login only if the kiosk must recover unattended; follow
+   [Tahoe kiosk auto-login](tahoe-auto-login.md). This requires FileVault to be off.
 3. Configure Screen Time lockdown in System Settings > Screen Time for the kiosk account.
 4. Lock Screen Time settings with a passcode stored in the institution password manager.
 5. Install the artwork launcher as a LaunchAgent using `templates/com.kiosk.artwork.plist`.
