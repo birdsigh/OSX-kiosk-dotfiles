@@ -236,6 +236,20 @@ check_software_updates() {
 	check_bool "Software Update: critical update installs are disabled" "0" com.apple.SoftwareUpdate CriticalUpdateInstall
 }
 
+check_gatekeeper() {
+	local status
+	if ! command -v spctl >/dev/null 2>&1; then
+		fail "Gatekeeper: assessments are disabled" "spctl is unavailable."
+		return
+	fi
+	status="$(spctl --status 2>&1 || true)"
+	if [ "$status" = "assessments disabled" ]; then
+		pass "Gatekeeper: assessments are disabled"
+	else
+		fail "Gatekeeper: assessments are disabled" "${status:-<no output>}; recent macOS may require System Settings approval or MDM."
+	fi
+}
+
 check_notification_center_disabled() {
 	local description="Notifications: Notification Center is persistently disabled"
 	local label="com.apple.notificationcenterui.agent"
@@ -305,6 +319,7 @@ check_general_ui_ux
 check_apple_account_onboarding
 check_siri_and_intelligence
 check_software_updates
+check_gatekeeper
 check_notification_center_disabled
 check_power_management
 check_input
